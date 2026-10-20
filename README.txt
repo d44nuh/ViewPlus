@@ -1,0 +1,1 @@
+This is a service for cinema management, including payments, functions, movies and some more useful tools 
