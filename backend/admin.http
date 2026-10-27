@@ -1,0 +1,25 @@
+POST http://localhost:3000/api/admin/movies
+Content-Type: application/json
+
+{
+  "title": "Inception",
+  "duration": 148,
+  "genre": "Sci-Fi",
+  "rating": "PG-13",
+  "synopsis": "A thief enters dreams to steal secrets."
+}
+
+###
+POST http://localhost:3000/api/admin/auditoriums
+Content-Type: application/json
+
+{ "name": "Room 1", "capacity": 80 }
+
+###
+POST http://localhost:3000/api/admin/showtimes
+Content-Type: application/json
+
+{ "movieId": 1, "auditoriumId": 1, "startTime": "2026-12-01T18:00:00.000Z" }
+
+###
+GET http://localhost:3000/api/admin/showtimes
