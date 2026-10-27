@@ -1,5 +1,7 @@
 import type { Request, Response } from "express";
 import Auditorium from "../models/auditorium.ts";
+import { Op } from "sequelize";
+import Showtime from "../models/showtime.ts";
 
 export async function createAuditorium(req: Request, res: Response) {
   const { name, capacity } = req.body;
@@ -36,6 +38,15 @@ export async function deleteAuditorium(req: Request, res: Response) {
   const auditorium = await Auditorium.findByPk(Number(req.params.id));
   if (!auditorium) {
     res.status(404).json({ message: "Auditorium not found" });
+    return;
+  }
+  const activeShowtimes = await Showtime.count({
+    where: { auditoriumId: auditorium.id, endTime: { [Op.gt]: new Date() } },
+  });
+  if (activeShowtimes > 0) {
+    res
+      .status(409)
+      .json({ message: "Auditorium has active or future showtimes" });
     return;
   }
   await auditorium.destroy();
