@@ -3,6 +3,7 @@ import express from "express";
 import { sequelize } from "./config/database.ts";
 import movieRoutes from "./routes/movieRoutes.ts";
 import auditoriumRoutes from "./routes/auditoriumRoutes.ts";
+import showtimeRoutes from "./routes/showtimeRoutes.ts";
 
 dotenv.config();
 
@@ -11,6 +12,7 @@ const app = express();
 app.use(express.json());
 app.use("/api/admin/movies", movieRoutes);
 app.use("/api/admin/auditoriums", auditoriumRoutes);
+app.use("/api/admin/showtimes", showtimeRoutes);
 
 const port = Number(process.env.PORT) || 3000;
 
