@@ -1,4 +1,5 @@
 import type { Request, Response } from 'express';
+import { HttpError } from '../services/http.error.ts';
 import { AuditoriumService } from '../services/auditorium.service.ts';
 
 export class AuditoriumController {
@@ -107,6 +108,12 @@ export class AuditoriumController {
       }
       res.status(204).send();
     } catch (error: any) {
+      if (error instanceof HttpError) {
+        res
+          .status(error.status)
+          .json({ success: false, message: error.message });
+        return;
+      }
       res.status(500).json({
         success: false,
         message: 'Error processing request',

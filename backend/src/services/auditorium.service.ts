@@ -1,4 +1,7 @@
+import { Op } from 'sequelize';
 import { Auditorium } from '../models/auditorium.model.ts';
+import { Showtime } from '../models/showtime.model.ts';
+import { HttpError } from './http.error.ts';
 
 export interface AuditoriumData {
   name: string;
@@ -30,6 +33,12 @@ export class AuditoriumService {
     const auditorium = await Auditorium.findByPk(id);
     if (!auditorium) {
       return false;
+    }
+    const activeShowtimes = await Showtime.count({
+      where: { auditoriumId: auditorium.id, endTime: { [Op.gt]: new Date() } },
+    });
+    if (activeShowtimes > 0) {
+      throw new HttpError(409, 'Auditorium has active or future showtimes');
     }
     await auditorium.destroy();
     return true;
