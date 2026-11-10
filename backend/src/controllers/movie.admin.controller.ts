@@ -1,4 +1,5 @@
 import type { Request, Response } from 'express';
+import { HttpError } from '../services/http.error.ts';
 import { MovieAdminService } from '../services/movie.admin.service.ts';
 import type { MovieData } from '../services/movie.admin.service.ts';
 
@@ -121,6 +122,12 @@ export class MovieAdminController {
       }
       res.status(204).send();
     } catch (error: any) {
+      if (error instanceof HttpError) {
+        res
+          .status(error.status)
+          .json({ success: false, message: error.message });
+        return;
+      }
       res.status(500).json({
         success: false,
         message: 'Error processing request',
